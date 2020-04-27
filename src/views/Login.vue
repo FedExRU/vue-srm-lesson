@@ -7,12 +7,12 @@
                 id="email"
                 type="text"
                 v-model.trim="email"
-                :class="{invalid: validateEmail($v)}"
+                :class="{invalid: validator.validateEmail($v)}"
             >
             <label for="email">Email</label>
             <small
               class="helper-text invalid"
-              v-if="validateEmail($v)"
+              v-if="validator.validateEmail($v)"
             >
               Некорректный Email!
             </small>
@@ -22,12 +22,12 @@
                 id="password"
                 type="password"
                 v-model="password"
-                :class="{invalid: validatePassword($v)}"
+                :class="{invalid: validator.validatePassword($v)}"
             >
             <label for="password">Пароль</label>
             <small
               class="helper-text invalid"
-              v-if="validatePassword($v)"
+              v-if="validator.validatePassword($v)"
             >
               Пароль не должен быть пустым и быть не менее {{$v.password.$params.minLength.min}} символов
             </small>
@@ -49,17 +49,25 @@
             <router-link to="/register">Зарегистрироваться</router-link>
             </p>
         </div>
-    </form> 
+    </form>
 </template>
 
 <script>
   import {email, required, minLength} from 'vuelidate/lib/validators'
+  import Validator from '../scripts/validator'
   export default {
     name: 'Login',
     data: () => ({
       email: '',
-      password: ''
+      password: '',
+      validator: null
     }),
+    beforeDestroy() {
+      delete this.validator;
+    },
+    beforeMount() {
+      this.validator = Validator;
+    },
     methods: {
       onSubmit() {
         if (this.$v.$invalid) {
@@ -71,15 +79,9 @@
           password: this.password
         };
         console.log(formData);
+        this.flash().destroyAll();
+        this.flash('Выполнена авторизация', 'success');
         this.$router.push('/');
-      },
-      validateEmail($v) {
-        return ($v.email.$dirty && !$v.email.required) ||
-          ($v.email.$dirty && !$v.email.email);
-      },
-      validatePassword($v) {
-        return ($v.password.$dirty && !$v.password.required) ||
-          ($v.password.$dirty && !$v.password.minLength);
       }
     },
     validations: {
