@@ -41,6 +41,8 @@
     }),
     methods: {
       logout() {
+        this.flash().destroyAll();
+        this.flash('Выполнен выход из системы', 'success');
         this.$router.push({
           path: '/login',
           query: {

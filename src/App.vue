@@ -24,5 +24,6 @@ export default {
 
 <style lang="scss">
   @import '~materialize-css/dist/css/materialize.min.css';
+  @import '~vue-flash-message/dist/vue-flash-message.min.css';
   @import 'assets/index.css';
 </style>

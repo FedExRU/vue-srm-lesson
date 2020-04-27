@@ -5,6 +5,7 @@
     <main class="app-content" :class="{full: !isOpen}">
       <div class="app-page">
         <router-view/>
+        <flash-message class="mainLayoutFlash"></flash-message>
       </div>
     </main>
     <RecordFloatButton />
