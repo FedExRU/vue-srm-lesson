@@ -69,19 +69,23 @@
       this.validator = Validator;
     },
     methods: {
-      onSubmit() {
+      async onSubmit() {
         if (this.$v.$invalid) {
           this.$v.$touch();
           return
         }
-        const formData = {
-          email: this.email,
-          password: this.password
-        };
-        console.log(formData);
-        this.flash().destroyAll();
-        this.flash('Выполнена авторизация', 'success');
-        this.$router.push('/');
+
+        try {
+          await this.$store.dispatch('login', {
+            email: this.email,
+            password: this.password
+          });
+          this.flash().destroyAll();
+          this.flash('Выполнена авторизация', 'success');
+          await this.$router.push('/');
+        } catch (e) {
+          this.flash(e.message, 'error');
+        }
       }
     },
     validations: {
